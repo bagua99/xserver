@@ -21,13 +21,13 @@ function M:load(userid)
         return obj
     end
 
-    obj = skynet.call("mysql", "lua", "load_player", userid)
+    obj = skynet.call(".mysql", "lua", "load_player", userid)
     if not obj then
         return nil
     end
 
-    self.tbl[userid] = obj
-    return obj
+    self.tbl[userid] = obj[1]
+    return obj[1]
 end
 
 function M:save(userid)
@@ -37,7 +37,7 @@ function M:save(userid)
     end
 
     -- 保存玩家信息
-    skynet.send("mysql", "lua", "save_player", obj)
+    skynet.send(".mysql", "lua", "save_player", obj)
 end
 
 function M:create(info)
@@ -49,7 +49,7 @@ function M:create(info)
     self.tbl[info.userid] = obj
 
     -- 保存玩家信息
-    skynet.send("mysql", "lua", "new_player", obj)
+    skynet.send(".mysql", "lua", "new_player", obj)
 
     return obj
 end
@@ -67,7 +67,7 @@ function M:update(userid, key, data)
     self.tbl[userid][key] = data
 
     -- 保存玩家信息
-    skynet.send("mysql", "lua", "update_player", {
+    skynet.send(".mysql", "lua", "update_player", {
         userid = userid,
         key = key,
         data = data,

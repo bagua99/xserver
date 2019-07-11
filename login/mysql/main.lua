@@ -8,7 +8,7 @@ local CMD = {}
 
 function CMD.start(conf)
     db = require("db").new(conf)
-    skynet.send("xlog", "lua", "log", string.format(
+    skynet.send(".xlog", "lua", "log", string.format(
         "连接mysql,host=%s,port=%d,database=%s",
         conf.host,
         conf.port,
@@ -27,12 +27,12 @@ function CMD.new_account(acc)
         acc.userid,
         mysql.quote_sql_str(acc.openid)
     )
-    skynet.send("xlog", "lua", "log", sql)
+    skynet.send(".xlog", "lua", "log", sql)
     utils.print(db:query(sql))
 end
 
 function CMD.load_all_account()
-    skynet.send("xlog", "lua", "log", "load all account")
+    skynet.send(".xlog", "lua", "log", "load all account")
     local accounts = db:query("select * from account;")
     return accounts
 end
@@ -56,7 +56,7 @@ function CMD.update_account(acc)
         mysql.quote_sql_str(acc.privilege),
         mysql.quote_sql_str(acc.account)
     )
-    skynet.send("xlog", "lua", "log", sql)
+    skynet.send(".xlog", "lua", "log", sql)
     utils.print(db:query(sql))
 end
 
@@ -75,5 +75,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("mysql")
+    skynet.register(".mysql")
 end)

@@ -9,7 +9,7 @@ skynet.start(function()
     local balance = 1
     local port = skynet.getenv("BASE_WEB_PORT")
     local id = socket.listen("0.0.0.0", port)
-    skynet.send("xlog", "lua", "log", "lobby listen client web port "..port)
+    skynet.send(".xlog", "lua", "log", "lobby listen client web port "..port)
     socket.start(id , function(_id, _)
         skynet.send(agent[balance], "lua", _id)
         balance = balance + 1

@@ -10,7 +10,7 @@ local AppSecret = "66df51f440b3e7cd9c45f9f8c8b131b9"
 local host = "api.weixin.qq.com"
 local host_ip
 local function get_access_token(code)
-    skynet.send("xlog", "lua", "log", "get_access_token code="..code)
+    skynet.send(".xlog", "lua", "log", "get_access_token code="..code)
     if not host_ip then
         host_ip = dns.resolve(host)
     end
@@ -19,12 +19,12 @@ local function get_access_token(code)
     local respheader = {}
     local status, body = https.request("GET",host_ip, path..query, respheader)
 
-    skynet.send("xlog", "lua", "log", "status="..status.." body="..body)
+    skynet.send(".xlog", "lua", "log", "status="..status.." body="..body)
     return cjson.decode(body)
 end
 
 local function refresh_access_token(refresh_token)
-    skynet.send("xlog", "lua", "log", "refresh_access_token token="..refresh_token)
+    skynet.send(".xlog", "lua", "log", "refresh_access_token token="..refresh_token)
     if not host_ip then
         host_ip = dns.resolve(host)
     end
@@ -33,7 +33,7 @@ local function refresh_access_token(refresh_token)
     local respheader = {}
     local status, body = https.request("GET",host_ip, path..query, respheader)
 
-    skynet.send("xlog", "lua", "log", "status="..status.." body="..body)
+    skynet.send(".xlog", "lua", "log", "status="..status.." body="..body)
     return cjson.decode(body)
 end
 
@@ -46,7 +46,7 @@ local function get_userinfo(access_token, openid)
 
     local respheader = {}
     local status, body = https.request("GET",host_ip, path..query, respheader)
-    skynet.send("xlog", "lua", "log", "status="..status.." body="..body)
+    skynet.send(".xlog", "lua", "log", "status="..status.." body="..body)
     return cjson.decode(body)
 end
 
@@ -113,5 +113,5 @@ skynet.start(function()
         end
     end)
     dns.server()
-    skynet.register("wxlogin")
+    skynet.register(".wxlogin")
 end)

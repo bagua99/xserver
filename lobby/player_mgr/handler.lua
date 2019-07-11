@@ -10,13 +10,13 @@ function M.login_lobby(msg)
     msg.userid = math.modf(msg.userid)
     msg.sex = math.modf(msg.sex)
     if not token.verify_token(msg) then
-        skynet.send("xlog", "lua", "log", "登录失败：verify token failed")
+        skynet.send(".xlog", "lua", "log", "登录失败：verify token failed")
         return {result = "token failed"}
     end
 
     local p = player_mgr:load(msg.userid)
     if p == nil then
-        skynet.send("xlog", "lua", "log", "创建玩家："..msg.userid)
+        skynet.send(".xlog", "lua", "log", "创建玩家："..msg.userid)
         p = player_mgr:create(msg)
     end
 
@@ -26,7 +26,7 @@ function M.login_lobby(msg)
     end
 
     -- 向房间管理器申请房间信息
-    local info = skynet.call("room_mgr", "lua",
+    local info = skynet.call(".room_mgr", "lua",
         "get_player_info", p.userid)
 
     local ret = {
@@ -66,7 +66,7 @@ function M.create_room(msg)
         sex = msg.sex,
     }
 
-    local ret = skynet.call("room_mgr", "lua", "create_room", msg)
+    local ret = skynet.call(".room_mgr", "lua", "create_room", msg)
     if not ret then
         return {result = "createroom fail"}
     else
@@ -93,7 +93,7 @@ function M.create_room(msg)
         cost_roomcard = -ret.costcard,
         date = os.date("%Y-%m-%d %H:%M:%S"),
     }
-    skynet.send("mysql", "lua", "roomcard_log", roomcard_msg)
+    skynet.send(".mysql", "lua", "roomcard_log", roomcard_msg)
 
     return {
         result = "success",
@@ -125,7 +125,7 @@ function M.join_room(msg)
         sex = msg.sex,
     }
 
-    local ret = skynet.call("room_mgr", "lua", "join_room", msg)
+    local ret = skynet.call(".room_mgr", "lua", "join_room", msg)
     if not ret then
         return {result = "join fail"}
     else
@@ -180,7 +180,7 @@ function M.finish_room(msg)
         cost_roomcard = costcard,
         date = os.date("%Y-%m-%d %H:%M:%S"),
     }
-    skynet.send("mysql", "lua", "roomcard_log", roomcard_msg)
+    skynet.send(".mysql", "lua", "roomcard_log", roomcard_msg)
 end
 
 -- 赠卡
@@ -222,14 +222,14 @@ function M.send_card(msg)
     local pGet = player_mgr:get(msg.getid)
     if not pGet then
         -- 数据库查询
-        local _player = skynet.call("mysql", "lua", "load_player", msg.getid)
+        local _player = skynet.call(".mysql", "lua", "load_player", msg.getid)
         if not _player then
             return {result = "getid fial"}
         end
 
         -- 赠卡玩家
         p.roomcard = p.roomcard - msg.count
-        skynet.call("mysql", "lua", "save_player", p)
+        skynet.call(".mysql", "lua", "save_player", p)
         -- 记录房卡消耗
         local roomcard_sendmsg =
         {
@@ -241,11 +241,11 @@ function M.send_card(msg)
             cost_roomcard = -msg.count,
             date = os.date("%Y-%m-%d %H:%M:%S"),
         }
-        skynet.send("mysql", "lua", "roomcard_log", roomcard_sendmsg)
+        skynet.send(".mysql", "lua", "roomcard_log", roomcard_sendmsg)
 
         -- 给赠送玩家增加
         _player.roomcard = _player.roomcard + msg.count
-        skynet.call("mysql", "lua", "save_player", _player)
+        skynet.call(".mysql", "lua", "save_player", _player)
         -- 记录房卡消耗
         local roomcard_getmsg =
         {
@@ -257,11 +257,11 @@ function M.send_card(msg)
             cost_roomcard = msg.count,
             date = os.date("%Y-%m-%d %H:%M:%S"),
         }
-        skynet.send("mysql", "lua", "roomcard_log", roomcard_getmsg)
+        skynet.send(".mysql", "lua", "roomcard_log", roomcard_getmsg)
     else
         -- 赠卡玩家
         p.roomcard = p.roomcard - msg.count
-        skynet.call("mysql", "lua", "save_player", p)
+        skynet.call(".mysql", "lua", "save_player", p)
          -- 记录房卡消耗
         local roomcard_sendmsg =
         {
@@ -273,11 +273,11 @@ function M.send_card(msg)
             cost_roomcard = -msg.count,
             date = os.date("%Y-%m-%d %H:%M:%S"),
         }
-        skynet.send("mysql", "lua", "roomcard_log", roomcard_sendmsg)
+        skynet.send(".mysql", "lua", "roomcard_log", roomcard_sendmsg)
 
         -- 给赠送玩家增加
         pGet.roomcard = pGet.roomcard + msg.count
-        skynet.call("mysql", "lua", "save_player", pGet)
+        skynet.call(".mysql", "lua", "save_player", pGet)
         -- 记录房卡消耗
         local roomcard_getmsg =
         {
@@ -289,7 +289,7 @@ function M.send_card(msg)
             cost_roomcard = msg.count,
             date = os.date("%Y-%m-%d %H:%M:%S"),
         }
-        skynet.send("mysql", "lua", "roomcard_log", roomcard_getmsg)
+        skynet.send(".mysql", "lua", "roomcard_log", roomcard_getmsg)
     end
 
     return {result="success", count = msg.count}

@@ -39,5 +39,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("httpclient")
+    skynet.register(".httpclient")
 end)

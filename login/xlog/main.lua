@@ -52,5 +52,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("xlog")
+    skynet.register(".xlog")
 end)

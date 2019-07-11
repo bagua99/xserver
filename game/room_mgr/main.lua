@@ -19,7 +19,7 @@ function CMD.create_room(info)
         roomid = info.room.roomid,
         addr = r:get_addr()
     }
-    skynet.send("dog", "lua", "new_room", msg)
+    skynet.send(".dog", "lua", "new_room", msg)
     return {
         result = "success",
         ip = GAME_ADDR,
@@ -50,18 +50,18 @@ function CMD.join_room(info)
 end
 
 function CMD.game_finish(info)
-    skynet.send("httpclient", "lua", "post", LOBBY_HOST, "/game_finish", info)
+    skynet.send(".httpclient", "lua", "post", LOBBY_HOST, "/game_finish", info)
     room_mgr:finish_room(info)
 end
 
 function CMD.leave_room_result(info)
     room_mgr:leave_room(info)
-    skynet.send("httpclient", "lua", "post", LOBBY_HOST, "/leave_room_result", info)
+    skynet.send(".httpclient", "lua", "post", LOBBY_HOST, "/leave_room_result", info)
 end
 
 function CMD.room_list()
     local info = room_mgr:room_list()
-    skynet.send("httpclient", "lua", "post", LOBBY_HOST, "/server_room_list", info)
+    skynet.send(".httpclient", "lua", "post", LOBBY_HOST, "/server_room_list", info)
 end
 
 skynet.start(function()
@@ -79,5 +79,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("room_mgr")
+    skynet.register(".room_mgr")
 end)

@@ -29,7 +29,7 @@ end
 function CMD.server_heartbeat(info)
     local g = G.game_mgr:get(info.gameid)
     if not g then
-        skynet.send("xlog", "lua", "log",
+        skynet.send(".xlog", "lua", "log",
             "游戏服务器注册找不到游戏类型gameid="..info.gameid)
         return
     end
@@ -91,5 +91,5 @@ skynet.start(function()
 
     init()
 
-    skynet.register("room_mgr")
+    skynet.register(".room_mgr")
 end)

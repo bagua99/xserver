@@ -6,12 +6,12 @@ local CMD = {}
 -- 停止服务
 function CMD.close_service()
     -- 停止创建房间
-    skynet.send("httpclient", "lua", "close_service")
+    skynet.send(".httpclient", "lua", "close_service")
 end
 
 -- 马上关服
 function CMD.close_now()
-    skynet.send("httpclient", "lua", "notify_close")
+    skynet.send(".httpclient", "lua", "notify_close")
 end
 
 skynet.start(function()
@@ -29,5 +29,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("monitor")
+    skynet.register(".monitor")
 end)

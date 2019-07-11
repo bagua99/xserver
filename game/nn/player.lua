@@ -76,7 +76,7 @@ function M:dump()
 end
 
 function M:send(name, msg)
-    skynet.send("dog", "lua", "send", self.userid, name, msg)
+    skynet.send(".dog", "lua", "send", self.userid, name, msg)
 end
 
 function M:begin()

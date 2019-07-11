@@ -65,15 +65,15 @@ function M.dump()
 end
 
 function M.finish(msg)
-    skynet.send("room_mgr", "lua", "game_finish", msg)
+    skynet.send(".room_mgr", "lua", "game_finish", msg)
 end
 
 function M.leave(msg)
-    skynet.send("room_mgr", "lua", "leave_room_result", msg)
+    skynet.send(".room_mgr", "lua", "leave_room_result", msg)
 end
 
 function M.add_record_list(msg)
-    skynet.send("httpclient", "lua", "post", RECORD_HOST, "/add_record_list", msg)
+    skynet.send(".httpclient", "lua", "post", RECORD_HOST, "/add_record_list", msg)
 end
 
 return M

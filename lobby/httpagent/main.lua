@@ -19,16 +19,16 @@ local function response(id, code, msg, hide_log, ...)
 end
 
 local function server_heartbeat(id, body)
-    --skynet.send("xlog", "lua", "log", "游戏服务器心跳"..body)
+    --skynet.send(".xlog", "lua", "log", "游戏服务器心跳"..body)
     local msg = cjson.decode(body)
-    local ret = skynet.call("room_mgr", "lua", "server_heartbeat", msg)
+    local ret = skynet.call(".room_mgr", "lua", "server_heartbeat", msg)
     response(id, 200, cjson.encode(ret), true)
 end
 
 local function server_room_list(id, body)
-    skynet.send("xlog", "lua", "log", "游戏服务器上报房间列表房间"..body)
+    skynet.send(".xlog", "lua", "log", "游戏服务器上报房间列表房间"..body)
     local msg = cjson.decode(body)
-    skynet.send("room_mgr", "lua", "server_room_list", msg)
+    skynet.send(".room_mgr", "lua", "server_room_list", msg)
 
     local ret_msg = {
         err = "success"
@@ -37,9 +37,9 @@ local function server_room_list(id, body)
 end
 
 local function server_stop_newroom(id, body)
-    skynet.send("xlog", "lua", "log", "游戏服务器停止创建房间"..body)
+    skynet.send(".xlog", "lua", "log", "游戏服务器停止创建房间"..body)
     local msg = cjson.decode(body)
-    skynet.send("room_mgr", "lua", "server_stop_newroom", msg)
+    skynet.send(".room_mgr", "lua", "server_stop_newroom", msg)
 
     local ret_msg = {
         err = "success"
@@ -48,9 +48,9 @@ local function server_stop_newroom(id, body)
 end
 
 local function server_close(id, body)
-    skynet.send("xlog", "lua", "log", "游戏服务器停服"..body)
+    skynet.send(".xlog", "lua", "log", "游戏服务器停服"..body)
     local msg = cjson.decode(body)
-    skynet.send("room_mgr", "lua", "server_close", msg)
+    skynet.send(".room_mgr", "lua", "server_close", msg)
 
     local ret_msg = {
         err = "success"
@@ -60,8 +60,8 @@ end
 
 local function game_finish(id, body)
     local msg = cjson.decode(body)
-    skynet.send("room_mgr", "lua", "game_finish", msg)
-    skynet.send("player_mgr", "lua", "finish_room", msg)
+    skynet.send(".room_mgr", "lua", "game_finish", msg)
+    skynet.send(".player_mgr", "lua", "finish_room", msg)
     local ret_msg = {
         err = "success"
     }
@@ -70,7 +70,7 @@ end
 
 local function leave_room_result(id, body)
     local msg = cjson.decode(body)
-    skynet.send("room_mgr", "lua", "leave_room_result", msg)
+    skynet.send(".room_mgr", "lua", "leave_room_result", msg)
     response(id, 200, cjson.encode({err = "success"}))
 end
 
@@ -79,7 +79,7 @@ local function handle(id)
     -- limit request body size to 8192 (you can pass nil to unlimit)
     local code, url, _, _, body = httpd.read_request(sockethelper.readfunc(id), 8192)
     if code ~= 200 then
-        skynet.send("xlog", "lua", "log", "大厅服务器WEB端口状态异常url="..url)
+        skynet.send(".xlog", "lua", "log", "大厅服务器WEB端口状态异常url="..url)
         socket.close(id)
         return
     end
@@ -101,7 +101,7 @@ local function handle(id)
     elseif path == "/leave_room_result" then
         leave_room_result(id, body)
     else
-        skynet.send("xlog", "lua", "log", "大厅服务器WEB端口url异常"..url)
+        skynet.send(".xlog", "lua", "log", "大厅服务器WEB端口url异常"..url)
     end
 
     socket.close(id)

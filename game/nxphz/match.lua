@@ -421,7 +421,7 @@ function M:GAME_OperateCardReq(userid, msg)
     local nOperateCardSeat = _player:getSeat()
 	-- 效验用户
 	if self.nCurrentSeat ~= define.INVALID_SEAT then
-        skynet.call("xlog", "lua", "log", "nRoomID="..self.nRoomID..",nCurrentSeat="..self.nCurrentSeat)
+        skynet.call(".xlog", "lua", "log", "nRoomID="..self.nRoomID..",nCurrentSeat="..self.nCurrentSeat)
 		return
     end
 
@@ -430,7 +430,7 @@ function M:GAME_OperateCardReq(userid, msg)
 	-- 效验状态
 	if self.tResponse[nOperateCardSeat] or
         (nOperate ~= define.ACK_NULL and (self.tUserAction[nOperateCardSeat] & nOperate) == 0) then
-        skynet.call("xlog", "lua", "log", string.format(
+        skynet.call(".xlog", "lua", "log", string.format(
             "nRoomID=%d,tResponse[%d]=%s",
             self.nRoomID,
             nOperateCardSeat,
@@ -450,7 +450,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
 		-- 是吃，但发错误吃操作码
 		if nChiKind <= 0 then
-            skynet.call("xlog", "lua", "log", "nRoomID="..self.nRoomID..",nChiKind <= 0")
+            skynet.call(".xlog", "lua", "log", "nRoomID="..self.nRoomID..",nChiKind <= 0")
 			return
 		end
 
@@ -465,7 +465,7 @@ function M:GAME_OperateCardReq(userid, msg)
 			if nKin == 0 then
 				-- 第一个吃数据居然无值,肯定错误了
 				if i == 1 then
-                    skynet.call("xlog", "lua", "log", "nKin == 0, i == 1 error nRoomID="..self.nRoomID)
+                    skynet.call(".xlog", "lua", "log", "nKin == 0, i == 1 error nRoomID="..self.nRoomID)
 					return
 				end
 
@@ -475,7 +475,7 @@ function M:GAME_OperateCardReq(userid, msg)
 			-- 加入吃牌数据
             local bChi, tCard = self:chiPaiMustCard(nKin, nCardData, i == 1)
 			if not bChi then
-                skynet.call("xlog", "lua", "log", string.format(
+                skynet.call(".xlog", "lua", "log", string.format(
                     "ChiPaiMustCard error nRoomID=%d,nKin=%d,i=%d",
                     self.nRoomID,
                     nKin,
@@ -505,7 +505,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
 		-- 要把手牌吃完，不能让他吃
 		if nMustCardCount >= nTotalCardCount then
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "ChiPaiMustCard error nRoomID=%d,nTotalCardCount=%d,nMustCardCount=%d",
                 self.nRoomID,
                 nTotalCardCount,
@@ -515,7 +515,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
         -- 吃了还有剩余
         if tChiCardData[nCardData] and self.tCardData[nOperateCardSeat][nCardData] > tChiCardData[nCardData] then
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "ChiPaiMustCard error nRoomID=%d,tCardData[%d][%d]=%d,tChiCardData[%d]=%d",
                 self.nRoomID,
                 nOperateCardSeat,
@@ -528,7 +528,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
         -- 还有多余张数
         if not tChiCardData[nCardData] and self.tCardData[nOperateCardSeat][nCardData] > 0 then
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "ChiPaiMustCard error nRoomID=%d,tCardData[%d][%d]=%d",
                 self.nRoomID,
                 nOperateCardSeat,
@@ -538,7 +538,7 @@ function M:GAME_OperateCardReq(userid, msg)
         end
         for nCard, nCount in pairs(tChiCardData) do
             if self.tCardData[nOperateCardSeat][nCard] >= 3 then
-                skynet.call("xlog", "lua", "log", string.format(
+                skynet.call(".xlog", "lua", "log", string.format(
                     "ChiPaiMustCard error nRoomID=%d,nChiKind=%d,nOperateCardSeat=%d,nCard=%d",
                     self.nRoomID,
                     nChiKind,
@@ -548,7 +548,7 @@ function M:GAME_OperateCardReq(userid, msg)
             end
 
             if nCount > self.tCardData[nOperateCardSeat][nCard] then
-                skynet.call("xlog", "lua", "log", string.format(
+                skynet.call(".xlog", "lua", "log", string.format(
                     "ChiPaiMustCard error nRoomID=%d,nChiKind=%d,nOperateCardSeat=%d,nCard=%d,nCount=%d",
                     self.nRoomID,
                     nChiKind,
@@ -584,7 +584,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
 	-- 执行判断
 	local nFirstCurrentSeat = (self.nOutCardSeat ~= define.INVALID_SEAT) and self.nOutCardSeat or self.nResumeSeat
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "OnUserOperateCard nRoomID=%d,nOutCardSeat=%d,nResumeSeat=%d,nFirstCurrentSeat=%d",
         self.nRoomID,
         self.nOutCardSeat,
@@ -629,7 +629,7 @@ function M:GAME_OperateCardReq(userid, msg)
 	if nMaxTargetAction ~= define.ACK_NULL and
         nMaxTargetSeat ~= nTargetSeat and
         not self.tResponse[nMaxTargetSeat] then
-        skynet.call("xlog", "lua", "log", string.format(
+        skynet.call(".xlog", "lua", "log", string.format(
             "nRoomID=%d,nOperateCardSeat=%d,nTargetSeat=%d,nMaxTargetSeat=%d,nMaxTargetAction=%d,tResponse[%d]=%s",
             self.nRoomID,
             nOperateCardSeat,
@@ -643,7 +643,7 @@ function M:GAME_OperateCardReq(userid, msg)
 	-- 设置最大动作玩家
 	local nTargetAction = self.tPerformAction[nMaxTargetSeat]
 	nTargetSeat = nMaxTargetSeat
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "OnUserOperateCard nRoomID=%d,nMaxTargetSeat=%d,nTargetAction=%d",
         self.nRoomID,
         nMaxTargetSeat,
@@ -685,7 +685,7 @@ function M:GAME_OperateCardReq(userid, msg)
             for i = 1, self.nPlayerCount do
                 strMsg = ",tUserAction["..i.."]="..tUserAction[i]
             end
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "nRoomID=%d,bWaitSendUserHu=%s,nOutCardSeat=%d,nOutCardData=%d,bFindHu=%s,%s",
                 self.nRoomID,
                 utils.table_2_str(self.bWaitSendUserHu),
@@ -769,7 +769,7 @@ function M:GAME_OperateCardReq(userid, msg)
 				end
 			end
 
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "NULL nRoomID=%d,bWaitSendUserHu=%s,nOutCardSeat=%d,nOutCardData=%d,bFindHu=%s",
                 self.nRoomID,
                 utils.table_2_str(self.bWaitSendUserHu),
@@ -782,7 +782,7 @@ function M:GAME_OperateCardReq(userid, msg)
                 if self.nOutCardSeat == define.INVALID_SEAT then
                     nCurrentHuSeat = self.nResumeSeat
                 end
-                skynet.call("xlog", "lua", "log", string.format(
+                skynet.call(".xlog", "lua", "log", string.format(
                     "NULL nRoomID=%d,nOutCardSeat=%d,nOutCardData=%d,nResumeSeat=%d,tPaoPai[%d]=%s,bTiCard=%s",
                     self.nRoomID,
                     self.nOutCardSeat,
@@ -801,7 +801,7 @@ function M:GAME_OperateCardReq(userid, msg)
 						-- 发送庄家出牌提示
 						self:sendOutCardNotify(self.nBankerSeat, true)
 					else
-                        skynet.call("xlog", "lua", "log", string.format(
+                        skynet.call(".xlog", "lua", "log", string.format(
                             "nOperate == NULL DiHu nRoomID=%d,nOutCardSeat=%d,nOutCardData=%d,nCurrentHuSeat=%d,"..
                             "nSendCardCount=%d,nOutCardCount=%d",
                             self.nRoomID,
@@ -815,7 +815,7 @@ function M:GAME_OperateCardReq(userid, msg)
 							-- 动作判断
 							local nCurrentCard = (self.nOutCardSeat ~= define.INVALID_SEAT) and self.nOutCardData or 0
 							local bUserAction = self:estimateUserRespond(nCurrentHuSeat, nCurrentCard, self.bDispatch)
-                            skynet.call("xlog", "lua", "log", string.format(
+                            skynet.call(".xlog", "lua", "log", string.format(
                                 "NULL DiHu nRoomID=%d,nOutCardSeat=%d,nOutCardData=%d,nCurrentHuSeat=%d,"..
                                 "bDispatch=%s,bUserAction=%s",
                                 self.nRoomID,
@@ -840,7 +840,7 @@ function M:GAME_OperateCardReq(userid, msg)
 							-- 动作判断
 							local bUserAction = self:estimateUserRespond(nCurrentHuSeat,
                                 self.nOutCardData, self.bDispatch)
-                            skynet.call("xlog", "lua", "log", string.format(
+                            skynet.call(".xlog", "lua", "log", string.format(
                                 "nOperate == NULL nRoomID=%d,nOutCardSeat=%d,nOutCardData=%d,nCurrentHuSeat=%d,"..
                                 "bDispatch=%s,bUserAction=%s",
                                 self.nRoomID,
@@ -890,7 +890,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
 	-- 吃牌操作
 	if (nTargetAction & define.ACK_CHI) ~= 0 then
-        skynet.call("xlog", "lua", "log", "ACK_CHI nRoomID="..self.nRoomID..",nTargetAction="..nTargetAction)
+        skynet.call(".xlog", "lua", "log", "ACK_CHI nRoomID="..self.nRoomID..",nTargetAction="..nTargetAction)
         local nColor = 0xFF
 		-- 吃类型
 		local nTempChiKind = self.tChiCardKind[nTargetSeat]
@@ -911,7 +911,7 @@ function M:GAME_OperateCardReq(userid, msg)
 		end
         local nChiCardCount = #tChiCardData
 		if nChiCardCount == 0 or (nChiCardCount%3) ~= 0 then
-            skynet.call("xlog", "lua", "log", "nRoomID="..self.nRoomID..",nChiCardCount="..nChiCardCount)
+            skynet.call(".xlog", "lua", "log", "nRoomID="..self.nRoomID..",nChiCardCount="..nChiCardCount)
 			return
 		end
 
@@ -963,7 +963,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
 	-- 碰牌操作
     if (nTargetAction & define.ACK_PENG) ~= 0 then
-		skynet.call("xlog", "lua", "log", "ACK_PENG nRoomID="..self.nRoomID..",nTargetAction="..nTargetAction)
+		skynet.call(".xlog", "lua", "log", "ACK_PENG nRoomID="..self.nRoomID..",nTargetAction="..nTargetAction)
 		-- 设置扑克
 		self.tCardData[nTargetSeat][self.nOutCardData] = 0
 
@@ -1001,7 +1001,7 @@ function M:GAME_OperateCardReq(userid, msg)
 
 	-- 吃胡操作
     if (nTargetAction & define.ACK_CHIHU) ~= 0 then
-        skynet.call("xlog", "lua", "log", "ACK_CHIHU nRoomID="..self.nRoomID..",nTargetAction="..nTargetAction)
+        skynet.call(".xlog", "lua", "log", "ACK_CHIHU nRoomID="..self.nRoomID..",nTargetAction="..nTargetAction)
 		-- 结束游戏
         self:gameEnd(nTargetSeat, define.END_NORMAL)
 		return
@@ -1014,7 +1014,7 @@ function M:GAME_OperateCardReq(userid, msg)
 		bUserAction = self:estimateUserRespond(self.nOutCardSeat, nCurrentCard, self.bDispatch)
 	end
 
-    skynet.call("xlog", "lua", "log", "ACK_CHIHU nRoomID="..self.nRoomID..
+    skynet.call(".xlog", "lua", "log", "ACK_CHIHU nRoomID="..self.nRoomID..
         ",bUserAction="..utils.table_2_str(bUserAction))
 	-- 派发扑克
 	if not bUserAction then
@@ -1215,7 +1215,7 @@ function M:gameEnd(nSeat, nEndMode)
 
             -- 计算积分
 			local nScore = math.floor((nHuXi - define.MIN_HU_XI)/3 + 1) * self.nCellScore * nBase
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "END_NORMAL nRoomID=%d,nScore=%d,nHuXi=%d,nCellScore=%d,nBase=%d",
                 self.nRoomID,
                 nScore,
@@ -1273,7 +1273,7 @@ function M:gameEnd(nSeat, nEndMode)
             szLog = szLog.."tGameScore["..i.."]="..tGameEnd.tGameScore[i]..
                 ",tTotalScore["..i.."]="..tGameEnd.tTotalScore[i]
 		end
-        skynet.call("xlog", "lua", "log", szLog)
+        skynet.call(".xlog", "lua", "log", szLog)
 
         if self.nGameCount >= self.nTotalGameCount then
             -- 游戏总结算消息广播
@@ -1622,7 +1622,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
     for i = 1, self.nPlayerCount do
         strMsg = ",nHuXi["..i.."]="..self.tHuXi[i]
     end
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
             "nRoomID=%d,bEstimate=%s,nCenterSeat=%d,nCenterCard=%d,bDispatch=%s,%s",
             self.nRoomID,
             utils.table_2_str(self.bEstimate),
@@ -1684,7 +1684,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		self.bSendNotify = true
 	end
 
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "Ti nRoomID=%d,bPerformAction=%s,bEstimate=%s,bDispatch=%s",
         self.nRoomID,
         utils.table_2_str(bPerformAction),
@@ -1739,7 +1739,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		end
 	end
 
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "wei nRoomID=%d,bPerformAction=%s,bEstimate=%s,bDispatch=%s",
         self.nRoomID,
         utils.table_2_str(bPerformAction),
@@ -1796,7 +1796,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		self.bSendNotify = true
 	end
 
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "send Hu nRoomID=%d,bPerformAction=%s,bEstimate=%s,bDispatch=%s,bWaitSendUserHu=%s",
         self.nRoomID,
         utils.table_2_str(bPerformAction),
@@ -1870,7 +1870,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		end
 	end
 
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "Hu nRoomID=%d,bEstimate=%s,bDispatch=%s",
         self.nRoomID,
         utils.table_2_str(self.bEstimate),
@@ -1950,7 +1950,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
             for i = 1, self.nPlayerCount do
                 strActionMsg = ",tUserAction["..i.."]="..self.tUserAction[i]
             end
-            skynet.call("xlog", "lua", "log", string.format(
+            skynet.call(".xlog", "lua", "log", string.format(
                 "nRoomID=%d,nCenterSeat=%d,nCenterCard=%d,%s",
                 self.nRoomID,
                 nCenterSeat,
@@ -1978,7 +1978,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		end
 	end
 
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "bSendNotify nRoomID=%d,nCenterSeat=%d,bSendNotify=%s,bTiCard=%s",
         self.nRoomID,
         nCenterSeat,
@@ -2003,7 +2003,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		return true
 	end
 
-    skynet.call("xlog", "lua", "log", "shoupai pao nRoomID="..self.nRoomID)
+    skynet.call(".xlog", "lua", "log", "shoupai pao nRoomID="..self.nRoomID)
 	-- 跑牌判断
 	for i = 1, self.nPlayerCount do
 		-- 用户过滤或玩家已经在跑牌状态了
@@ -2043,7 +2043,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
                 -- 删除扑克
                 self.tCardData[nActionSeat][nCenterCard] = 0
 
-                skynet.call("xlog", "lua", "log", string.format(
+                skynet.call(".xlog", "lua", "log", string.format(
                     "nRoomID=%d,nCenterSeat=%d,nActionSeat=%d,bDispatch=%s",
                     self.nRoomID,
                     nCenterSeat,
@@ -2085,7 +2085,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
                         -- 设置摸牌玩家可胡
                         self.tUserAction[nActionSeat] = define.ACK_CHIHU
 
-                        skynet.call("xlog", "lua", "log", string.format(
+                        skynet.call(".xlog", "lua", "log", string.format(
                             "PAO_HU nRoomID=%d,nCenterSeat=%d,nActionSeat=%d,bDispatch=%s,tUserAction[%d]=%d,bHu=%s",
                             self.nRoomID,
                             nCenterSeat,
@@ -2142,7 +2142,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
         end
 	end
 
-    skynet.call("xlog", "lua", "log", "paidun pao nRoomID="..self.nRoomID)
+    skynet.call(".xlog", "lua", "log", "paidun pao nRoomID="..self.nRoomID)
 	-- 跑牌转换
 	for i = 1, self.nPlayerCount do
 		-- 玩家已经在跑牌状态了
@@ -2258,7 +2258,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
                             -- 设置摸牌玩家可胡
                             self.tUserAction[nActionSeat] = define.ACK_CHIHU
 
-                            skynet.call("xlog", "lua", "log", string.format(
+                            skynet.call(".xlog", "lua", "log", string.format(
                                 "PAO_HU change nRoomID=%d,nCenterSeat=%d,nActionSeat=%d,tUserAction[%d]=%d,bHu=%s",
                                 self.nRoomID,
                                 nCenterSeat,
@@ -2386,7 +2386,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
     for i = 1, self.nPlayerCount do
         strActionMsg = ",tUserAction["..i.."]="..self.tUserAction[i]
     end
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", string.format(
         "nRoomID=%d,nCenterSeat=%d,nCenterCard=%d,%s",
         self.nRoomID,
         nCenterSeat,
@@ -2428,7 +2428,7 @@ function M:estimateUserRespond(nCenterSeat, nCenterCard, bDispatch)
 		return true
 	end
 
-    skynet.call("xlog", "lua", "log", "nRoomID="..self.nRoomID..",nCenterSeat="..nCenterSeat)
+    skynet.call(".xlog", "lua", "log", "nRoomID="..self.nRoomID..",nCenterSeat="..nCenterSeat)
 	return false
 end
 
@@ -2721,8 +2721,8 @@ function M:huPaiBase(tWeaveItemArray)
             szCard = szCard..nCardData..","
         end
     end
-    skynet.call("xlog", "lua", "log", "huPaiBase nRoomID="..self.nRoomID..",szCard="..szCard)
-    skynet.call("xlog", "lua", "log", string.format(
+    skynet.call(".xlog", "lua", "log", "huPaiBase nRoomID="..self.nRoomID..",szCard="..szCard)
+    skynet.call(".xlog", "lua", "log", string.format(
         "huPaiBase nRoomID=%d,nHeiPaiCount=%d,nHongPaiCount=%d,nDaPaiCount=%d,nXiaoPaiCount=%d",
         self.nRoomID,
         nHeiPaiCount,

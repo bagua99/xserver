@@ -10,7 +10,7 @@ local function request(host, url, msg)
     local status, body = httpc.request("post",
         host, url, respheader, header,content)
     if status ~= 200 then
-        skynet.call("xlog", "lua", "log", "http请求失败")
+        skynet.call(".xlog", "lua", "log", "http请求失败")
         return {}
     end
     return cjson.decode(body)
@@ -35,7 +35,7 @@ local function heartbeat()
 
     -- 请求发送当前服务器上所有的房间
     if ret.result == "room_list" then
-        skynet.send("room_mgr", "lua", "room_list")
+        skynet.send(".room_mgr", "lua", "room_list")
     end
 end
 
@@ -74,7 +74,7 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("httpclient")
+    skynet.register(".httpclient")
 
     skynet.timeout(5*100, heartbeat)
 end)

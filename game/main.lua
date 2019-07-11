@@ -5,20 +5,20 @@ local function main()
         skynet.getenv("DEBUG_CONSOLE_PORT"))
 
     skynet.newservice("xlog")
-    skynet.call("xlog", "lua", "start")
+    skynet.call(".xlog", "lua", "start")
 
     skynet.newservice("httpclient")
 
     -- watchdog
-    skynet.uniqueservice("dog")
-    skynet.call("dog", "lua", "start", {
+    skynet.newservice("dog")
+    skynet.call(".dog", "lua", "start", {
         addr = "0.0.0.0",
         port = skynet.getenv("GAME_PORT")
     })
 
     -- room_mgr
-    skynet.uniqueservice("room_mgr")
-    skynet.call("room_mgr", "lua", "start")
+    skynet.newservice("room_mgr")
+    skynet.call(".room_mgr", "lua", "start")
 
     -- http
     skynet.newservice("http")

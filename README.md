@@ -1,11 +1,16 @@
 1、导入mysql
+
 mysql -u root -p
+
 输入密码进入mysql
+
 source /home/bagua/xserver/xserver.sql;
 
 
 2、编译skynet
+
 cd /home/bagua/xserver/skynet
+
 make linux
 
 

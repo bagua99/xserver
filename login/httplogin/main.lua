@@ -6,7 +6,7 @@ local total_visitor = 0
 local function lognum()
     skynet.timeout(60*100, function() lognum() end)
     visitor = 0
-    skynet.send("xlog", "lua", "log", "http访问总次数"..total_visitor..",当前分钟次数"..visitor)
+    skynet.send(".xlog", "lua", "log", "http访问总次数"..total_visitor..",当前分钟次数"..visitor)
 end
 
 skynet.start(function()
@@ -16,7 +16,7 @@ skynet.start(function()
     end
     local balance = 1
     local port = skynet.getenv("LOGIN_LISTEN_PORT")
-    skynet.send("xlog", "lua", "log", "Listen web port "..port)
+    skynet.send(".xlog", "lua", "log", "Listen web port "..port)
     local id = socket.listen("0.0.0.0", port)
     socket.start(id, function(_id, _)
         total_visitor = total_visitor + 1

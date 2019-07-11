@@ -130,8 +130,8 @@ function M:big_result()
     for _,p in pairs(self.tbl) do
         table.insert(msg.players, p.userid)
     end
-    skynet.send("dog", "lua", "room_finish", msg)
-    skynet.send("room_mgr", "lua", "room_finish", msg)
+    skynet.send(".dog", "lua", "room_finish", msg)
+    skynet.send(".room_mgr", "lua", "room_finish", msg)
     skynet.exit()
 end
 

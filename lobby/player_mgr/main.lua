@@ -29,18 +29,18 @@ function CMD.add_usercard(userid, count)
     local pGet = player_mgr:get(userid)
     if not pGet then
         -- 数据库查询
-        local _player = skynet.call("mysql", "lua", "load_player", userid)
+        local _player = skynet.call(".mysql", "lua", "load_player", userid)
         if not _player then
             return
         end
 
         -- 赠卡玩家
         _player.roomcard = _player.roomcard + count
-        skynet.call("mysql", "lua", "save_player", _player)
+        skynet.call(".mysql", "lua", "save_player", _player)
     else
         -- 给赠送玩家增加
         pGet.roomcard = pGet.roomcard + count
-        skynet.call("mysql", "lua", "save_player", pGet)
+        skynet.call(".mysql", "lua", "save_player", pGet)
     end
 end
 
@@ -69,5 +69,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("player_mgr")
+    skynet.register(".player_mgr")
 end)

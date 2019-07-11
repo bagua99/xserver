@@ -135,7 +135,7 @@ function M:big_result(game)
     for _, _player in pairs(self.tbl_player) do
         table.insert(msg.players, _player.userid)
     end
-    skynet.send("dog", "lua", "room_finish", msg)
+    skynet.send(".dog", "lua", "room_finish", msg)
     room.finish(msg)
     skynet.exit()
 end
@@ -151,7 +151,7 @@ function M:leave_room(players)
         self:remove(userid)
     end
 
-    skynet.send("dog", "lua", "leave_room", msg)
+    skynet.send(".dog", "lua", "leave_room", msg)
     room.leave(msg)
 end
 

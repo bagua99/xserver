@@ -66,7 +66,7 @@ function M:create(msg)
         },
         player = msg.player,
     }
-    local ret = skynet.call("httpclient", "lua",
+    local ret = skynet.call(".httpclient", "lua",
         "post", server.host, "/create_room", req_msg)
     if ret.result ~= "success" then
         return {result = ret.result}
@@ -99,7 +99,7 @@ function M:join(msg)
         return {result = "room not find"}
     end
 
-    local ret = skynet.call("httpclient", "lua",
+    local ret = skynet.call(".httpclient", "lua",
         "post", r.host, "/join_room", msg)
     if not ret then
         return {result = "join fail"}
@@ -171,7 +171,7 @@ function M:info_func()
             table.insert(t[roomid], userid)
         end
     end
-    skynet.send("xlog", "lua", "log", "self.room_tbl="..utils.obj_serialize(t))
+    skynet.send(".xlog", "lua", "log", "self.room_tbl="..utils.obj_serialize(t))
 end
 
 return M

@@ -9,7 +9,7 @@ local utils = require "utils"
 local crc32 = require "crc32"
 
 local function response(id, code, msg, ...)
-    skynet.send("xlog", "lua", "log", "base_web返回"..utils.table_2_str(msg))
+    skynet.send(".xlog", "lua", "log", "base_web返回"..utils.table_2_str(msg))
     msg = utils.base64encode(msg)
     local ok, err = httpd.write_response(sockethelper.writefunc(id), code, msg, ...)
     if not ok then
@@ -19,39 +19,39 @@ local function response(id, code, msg, ...)
 end
 
 local function login_lobby(id, body)
-    skynet.send("xlog", "lua", "log", "login_lobby请求"..body)
+    skynet.send(".xlog", "lua", "log", "login_lobby请求"..body)
     local msg = cjson.decode(body)
-    local ret = skynet.call("player_mgr", "lua", "login_lobby", msg)
+    local ret = skynet.call(".player_mgr", "lua", "login_lobby", msg)
 
     response(id, 200, cjson.encode(ret))
 end
 
 -- 玩家加入房间成功
 local function create_room(id, body)
-    skynet.send("xlog", "lua", "log", "create_room请求"..body)
+    skynet.send(".xlog", "lua", "log", "create_room请求"..body)
     local msg = cjson.decode(body)
-    local ret = skynet.call("player_mgr", "lua", "create_room", msg)
+    local ret = skynet.call(".player_mgr", "lua", "create_room", msg)
     response(id, 200, cjson.encode(ret))
 end
 
 local function join_room(id, body)
-    skynet.send("xlog", "lua", "log", "join_room请求"..body)
+    skynet.send(".xlog", "lua", "log", "join_room请求"..body)
     local msg = cjson.decode(body)
-    local ret = skynet.call("player_mgr", "lua", "join_room", msg)
+    local ret = skynet.call(".player_mgr", "lua", "join_room", msg)
     response(id, 200, cjson.encode(ret))
 end
 
 local function send_card(id, body)
-    skynet.send("xlog", "lua", "log", "send_card"..body)
+    skynet.send(".xlog", "lua", "log", "send_card"..body)
     local msg = cjson.decode(body)
-    local ret = skynet.call("player_mgr", "lua", "send_card", msg)
+    local ret = skynet.call(".player_mgr", "lua", "send_card", msg)
     response(id, 200, cjson.encode(ret))
 end
 
 local function update_userinfo(id, body)
-    skynet.send("xlog", "lua", "log", "update_userinfo"..body)
+    skynet.send(".xlog", "lua", "log", "update_userinfo"..body)
     local msg = cjson.decode(body)
-    local ret = skynet.call("player_mgr", "lua", "update_userinfo", msg)
+    local ret = skynet.call(".player_mgr", "lua", "update_userinfo", msg)
     response(id, 200, cjson.encode(ret))
 end
 
@@ -60,7 +60,7 @@ local function handle(id)
     -- limit request body size to 8192 (you can pass nil to unlimit)
     local code, url, _, _, _ = httpd.read_request(sockethelper.readfunc(id), 2048)
     if code ~= 200 then
-        skynet.send("xlog", "lua", "log", "base_web请求状态异常code="..code)
+        skynet.send(".xlog", "lua", "log", "base_web请求状态异常code="..code)
         socket.close(id)
         return
     end
@@ -98,7 +98,7 @@ local function handle(id)
     elseif path == "/update_userinfo" then
         update_userinfo(id, content)
     else
-        skynet.send("xlog", "lua", "log", "base_web请求path异常"..path)
+        skynet.send(".xlog", "lua", "log", "base_web请求path异常"..path)
     end
 
     socket.close(id)

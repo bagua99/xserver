@@ -43,7 +43,7 @@ end
 
 -- 微信登录
 function CMD.wx_login(info)
-    skynet.send("xlog", "lua", "log", "wx_login "..utils.table_2_str(info))
+    skynet.send(".xlog", "lua", "log", "wx_login "..utils.table_2_str(info))
     info.account = "wxqd"..info.openid
     info.nickname = utils.filter_spec_chars(info.nickname)
     info.headimgurl = utils.base64encode(info.headimgurl)
@@ -90,7 +90,7 @@ function CMD.wx_tmp_login(info)
         return "fail", nil
     end
 
-    skynet.send("xlog", "lua", "log", "wx_tmp_login userid="..acc.userid)
+    skynet.send(".xlog", "lua", "log", "wx_tmp_login userid="..acc.userid)
 
     local ret = utils.copy_table(acc)
     ret.token = token.get_token(ret)
@@ -141,5 +141,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("login")
+    skynet.register(".login")
 end)

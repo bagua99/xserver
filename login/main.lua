@@ -4,11 +4,11 @@ local function main()
     skynet.newservice("debug_console", 1800)
 
     skynet.newservice("xlog")
-    skynet.call("xlog", "lua", "start")
+    skynet.call(".xlog", "lua", "start")
 
     -- mysql
     skynet.newservice("mysql")
-    skynet.call("mysql", "lua", "start", {
+    skynet.call(".mysql", "lua", "start", {
         host = "127.0.0.1",
         port = 3306,
         database = "xserver",
@@ -23,8 +23,8 @@ local function main()
     skynet.newservice("wxlogin")
 
     -- 登陆服务
-    local login = skynet.newservice("login")
-    skynet.call(login, "lua", "start")
+    skynet.newservice("login")
+    skynet.call(".login", "lua", "start")
 
     skynet.exit()
 end

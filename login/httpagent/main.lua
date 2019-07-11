@@ -46,7 +46,7 @@ local function login(id, body)
         return
     end
 
-    local ret, acc = skynet.call("login", "lua", "verify", msg)
+    local ret, acc = skynet.call(".login", "lua", "verify", msg)
     if ret ~= "success" then
         response(id, 200, cjson.encode({msg = ret}))
         return
@@ -101,7 +101,7 @@ local function register(id, body)
         return
     end
 
-    local ret, acc = skynet.call("login", "lua", "register", msg)
+    local ret, acc = skynet.call(".login", "lua", "register", msg)
     if ret ~= "success" then
         response(id, 200, cjson.encode({msg = ret}))
         return
@@ -112,7 +112,7 @@ end
 
 -- 游客登录
 local function guest(id, _)
-    local err, acc = skynet.call("login", "lua", "guest")
+    local err, acc = skynet.call(".login", "lua", "guest")
     if err ~= "success" then
         response(id, 200, cjson.encode({msg = err}))
         return
@@ -129,7 +129,7 @@ local function wx_login(id, body)
         return
     end
 
-    local err, acc = skynet.call("login", "lua", "wx_login", ret)
+    local err, acc = skynet.call(".login", "lua", "wx_login", ret)
     if err ~= "success" then
         response(id, 1, "")
         return
@@ -140,7 +140,7 @@ end
 
 local function wx_tmp_login(id, body)
     local msg = cjson.decode(body)
-    local err, acc = skynet.call("login", "lua", "wx_tmp_login", msg)
+    local err, acc = skynet.call(".login", "lua", "wx_tmp_login", msg)
     if err ~= "success" then
         response(id, 1, "")
         return
@@ -168,7 +168,7 @@ local function wx_tmp_login(id, body)
         access_update = ret.access_update,
     }
     -- 更新信息
-    local reat_ack = skynet.call("login", "lua", "wx_login_update", info)
+    local reat_ack = skynet.call(".login", "lua", "wx_login_update", info)
     if not reat_ack then
         response(id, 1, "")
         return

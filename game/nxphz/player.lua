@@ -27,7 +27,7 @@ end
 
 -- 发送消息
 function M:send(name, msg)
-    skynet.send("dog", "lua", "send", self.userid, name, msg)
+    skynet.send(".dog", "lua", "send", self.userid, name, msg)
 end
 
 -- 设置位置

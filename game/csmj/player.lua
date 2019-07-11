@@ -113,7 +113,7 @@ function M:dump(match, me)
 end
 
 function M:send(name, msg)
-    skynet.send("dog", "lua", "send", self.userid, name, msg)
+    skynet.send(".dog", "lua", "send", self.userid, name, msg)
 end
 
 -- 上线

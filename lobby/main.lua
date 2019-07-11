@@ -4,11 +4,11 @@ local function main()
     skynet.newservice("debug_console", 2800)
 
     skynet.newservice("xlog")
-    skynet.call("xlog", "lua", "start")
+    skynet.call(".xlog", "lua", "start")
 
     -- mysql
     skynet.newservice("mysql")
-    skynet.call("mysql", "lua", "start", {
+    skynet.call(".mysql", "lua", "start", {
         host = "127.0.0.1",
         port = 3306,
         database = "xserver",
@@ -18,10 +18,10 @@ local function main()
     })
 
     -- player_mgr
-    skynet.uniqueservice("player_mgr")
+    skynet.newservice("player_mgr")
 
     -- room_mgr
-    skynet.uniqueservice("room_mgr")
+    skynet.newservice("room_mgr")
 
     skynet.newservice("httpclient")
     skynet.newservice("httpserver")

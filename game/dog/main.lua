@@ -51,5 +51,5 @@ skynet.start(function()
         end
     end)
 
-    skynet.register("dog")
+    skynet.register(".dog")
 end)
