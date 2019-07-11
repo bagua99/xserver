@@ -1,0 +1,230 @@
+package nxphz;
+
+// 玩家信息
+message UserGameData
+{
+    required uint64 userid = 1;     // 玩家ID
+    required string nickname = 2;   // 玩家名字
+    required int32  sex = 3;        // 性别
+    required string headimgurl = 4; // 头像路径
+    required int32 score = 5;       // 分数
+    required string ip = 6;         // IP
+    required int32 seat = 7;        // 座位
+    required bool offline = 8;      // 是否离线
+    required string latitude = 9;   // 纬度
+    required string longitude = 10; // 经度
+    required string adds = 11;      // 详细地址
+}
+
+// 牌数据
+message CardData
+{
+    repeated int32 tCardData = 1;           // 牌
+}
+
+// 组合数据
+message WeaveOption
+{
+    required int32 nWeaveKind = 1;           // 组合类型
+    required int32 nCenterCard = 2;          // 中心牌
+    repeated int32 tCardData = 3;            // 牌
+}
+
+// 组合信息
+message WeaveInfo
+{
+    repeated WeaveOption options = 1;        // 组合参数
+}
+
+// 胡牌类型
+message HuPaiOption
+{
+    optional string key = 1;
+    optional int32 nValue = 2;
+}
+
+// 胡牌信息
+message HuPaiInfo
+{
+    repeated HuPaiOption options = 1;        // 胡牌参数
+}
+
+// 房间配置
+message RoomOption
+{
+    optional string key = 1;
+    optional int32 nValue = 2;
+    optional string strValue = 3;
+}
+
+// 房间信息
+message RoomInfo
+{
+    repeated RoomOption options = 1;        // 房间参数
+}
+
+// 玩家进入
+message GAME_PlayerEnterAck
+{
+    required UserGameData userData = 1;     // 玩家信息
+}
+
+// 玩家退出
+message GAME_PlayerLeaveAck
+{
+    required int32 nSeat = 1;               // 位置
+}
+
+// 玩家进入游戏
+message GAME_EnterGameAck
+{
+    required int32 err = 1;                 // 错误码
+    repeated UserGameData players = 2;      // 所有玩家信息
+    required RoomInfo room = 3;             // 房间信息
+}
+
+// 投票结果信息(对应protocol)
+message VoteResult
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 断线重连结构体
+message GAME_GameSceneAck
+{
+    required int32 nGameStatus = 1;         // 游戏状态
+    required int32 nCellScore = 2;          // 底分
+    required int32 nDissoveSeat = 3;        // 解散玩家位置
+    required int32 nDissoveTime = 4;        // 解散时间
+    repeated VoteResult vote = 5;           // 投票状态
+    repeated int32 tGameScore = 6;          // 玩家游戏分数
+    required int32 nGameCount = 7;          // 当前局数
+    required int32 nTotalGameCount = 8;     // 总局数
+    repeated bool bReady = 9;               // 是否准备
+    required int32 nBankerSeat = 10;        // 庄家位置
+}
+
+// 准备请求
+message GAME_ReadyReq
+{
+    required bool bReady = 1;               // 是否准备
+}
+
+// 准备
+message GAME_ReadyAck
+{
+    required int32 nSeat = 1;               // 位置
+    required bool bReady = 2;               // 是否准备
+}
+
+// 游戏开始消息
+message GAME_GameStartAck
+{
+    required int32 nCurrentSeat = 1;        // 出牌位置
+    repeated int32 nCardData = 2;           // 自己牌
+}
+
+// 请求出牌
+message GAME_OutCardReq
+{
+    required int32 nCardData = 1;           // 出牌
+}
+
+// 出牌
+message GAME_OutCardAck
+{
+    required int32 nCurrentSeat = 1;        // 出牌玩家
+    required int32 nCardData = 2;           // 出牌
+}
+
+// 出牌提示
+message GAME_OutCardNotifyAck
+{
+	required int32 nCurrentSeat = 1;        // 出牌玩家
+    required bool bOutCard = 2;				// 出牌标志
+}
+
+// 发牌
+message GAME_SendCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    required int32 nCardData = 2;           // 发牌
+    required int32 nOutCardSeat = 3;        // 上轮出牌位置
+    required int32 nOutCardData = 4;        // 上轮出牌值
+}
+
+// 请求操作
+message GAME_OperateCardReq
+{
+	required int32 nOperate = 1;			// 操作代码
+    required int32 nChiKind = 2;			// 每个字节表示1个吃操作
+}
+
+// 操作牌
+message GAME_OperateCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    required int32 nCardData = 2;           // 操作牌
+    required int32 nOperate = 3;            // 操作类型
+}
+
+// 提牌
+message GAME_TiCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    required int32 nCardData = 2;           // 操作牌
+    required int32 nRemoveCount = 3;        // 删除牌数量
+    required bool bWeiToTi = 4;             // 偎变提
+}
+
+// 偎牌
+message GAME_WeiCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    required int32 nCardData = 2;           // 操作牌
+    required bool bChouWei = 3;             // 是否臭偎
+}
+
+// 跑牌
+message GAME_PaoCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    required int32 nCardData = 2;           // 操作牌
+    required int32 nRemoveCount = 3;        // 删除牌数量
+    required bool bWeiToPao = 4;            // 偎变跑
+}
+
+// 吃牌
+message GAME_ChiCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    repeated int32 tCardData = 2;           // 吃牌
+}
+
+// 碰牌
+message GAME_PengCardAck
+{
+    required int32 nCurrentSeat = 1;        // 发牌玩家
+    required int32 nCardData = 2;           // 碰牌
+}
+
+// 游戏结束
+message GAME_GameEndAck
+{
+    repeated int32 tGameScore = 1;          // 输赢分
+    repeated int32 tTotalScore = 2;         // 总分数
+    repeated CardData card = 3;             // 玩家手牌
+    repeated WeaveInfo weaveInfo = 4;       // 组合信息
+    repeated int32 tRepertoryCard = 5;      // 底牌
+    required int32 nHuCard = 6;             // 胡牌
+    required int32 nWinSeat = 7;            // 胡牌位置
+    required int32 nBankSeat = 8;           // 本局庄家位置
+    required HuPaiInfo huPaiInfo = 9;       // 胡牌信息
+}
+
+// 游戏总结算
+message GAME_GameTotalEndAck
+{
+    repeated int32 tTotalScore = 1;         // 总分数
+}

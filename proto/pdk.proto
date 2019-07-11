@@ -1,0 +1,153 @@
+package pdk;
+
+// 玩家信息
+message UserGameData
+{
+    required uint64 userid = 1;     // 玩家ID
+    required string nickname = 2;   // 玩家名字
+    required int32  sex = 3;        // 性别
+    required string headimgurl = 4; // 头像路径
+    required int32 score = 5;       // 分数
+    required string ip = 6;         // IP
+    required int32 seat = 7;        // 座位
+    required bool offline = 8;      // 是否离线
+    required string latitude = 9;   // 纬度
+    required string longitude = 10; // 经度
+    required string adds = 11;      // 详细地址
+}
+
+// 房间配置
+message RoomOption
+{
+    optional string key = 1;
+    optional int32 nValue = 2;
+    optional string strValue = 3;
+}
+
+// 房间信息
+message RoomInfo
+{
+    repeated RoomOption options = 1;        // 房间参数
+}
+
+// 玩家进入
+message GAME_PlayerEnterAck
+{
+    required UserGameData userData = 1;     // 玩家信息
+}
+
+// 玩家退出
+message GAME_PlayerLeaveAck
+{
+    required int32 nSeat = 1;               // 位置
+}
+
+// 玩家进入游戏
+message GAME_EnterGameAck
+{
+    required int32 err = 1;                 // 错误码
+    repeated UserGameData players = 2;      // 所有玩家信息
+    required RoomInfo room = 3;             // 房间信息
+}
+
+// 投票结果信息(对应protocol)
+message VoteResult
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 断线重连结构体
+message GAME_GameSceneAck
+{
+    required int32 nGameStatus = 1;         // 游戏状态
+    required int32 nCellScore = 2;          // 底分
+    required int32 nDissoveSeat = 3;        // 解散玩家位置
+    required int32 nDissoveTime = 4;        // 解散时间
+    repeated VoteResult vote = 5;           // 投票状态
+    repeated int32 nGameScore = 6;          // 玩家游戏分数
+    required int32 nGameCount = 7;          // 当前局数
+    required int32 nTotalGameCount = 8;     // 总局数
+    repeated bool bReady = 9;               // 是否准备
+    required int32 nBankerSeat = 10;        // 庄家位置
+    required int32 nLastOutSeat = 11;       // 最后出牌位置
+    required int32 nCurrentSeat = 12;       // 当前出牌位置
+    repeated int32 nCardData = 13;          // 玩家牌
+    repeated int32 nCardCount = 14;         // 玩家牌数
+    repeated int32 nTurnCardData = 15;      // 出牌
+}
+
+// 准备请求
+message GAME_ReadyReq
+{
+    required bool bReady = 1;               // 是否准备
+}
+
+// 准备
+message GAME_ReadyAck
+{
+    required int32 nSeat = 1;               // 位置
+    required bool bReady = 2;               // 是否准备
+}
+
+// 游戏开始消息
+message GAME_GameStartAck
+{
+    required int32 nCurrentSeat = 1;        // 出牌位置
+    repeated int32 nCardData = 2;           // 自己牌
+}
+
+message GAME_OutCardReq
+{
+    repeated int32 nCardData = 1;           // 出牌
+}
+
+// 玩家打牌
+message GAME_OutCardAck
+{
+    required int32 nCurrentSeat = 1;        // 下个出牌位置
+    required int32 nOutCardSeat = 2;        // 本次出牌位置
+    repeated int32 nCardData = 3;           // 出牌
+    required bool  bLeftOne = 4;            // 只剩一张(不显示牌时,1张牌需要报警,需要服务器通知客户端)
+}
+
+// 请求过牌
+message GAME_PassCardReq
+{
+}
+
+// 过牌结果
+message GAME_PassCardAck
+{
+    required bool bNewTurn = 1;             // 是否新一轮
+    required int32 nPassSeat = 2;           // 过牌位置
+    required int32 nCurrentSeat = 3;        // 下个出牌位置
+}
+
+// 提示信息
+message GAME_PromptAck
+{
+    required string szPrompt = 1;           // 提示语
+}
+
+message CardData
+{
+    repeated int32 nCardData = 1;           // 牌
+}
+
+message GAME_GameEndAck
+{
+    repeated int32 nGameScore = 1;          // 输赢分
+    repeated int32 nTotalScore = 2;         // 总分数
+    repeated int32 nBombCount = 3;          // 炸弹数
+    repeated CardData card = 4;             // 玩家手牌
+}
+
+// 游戏总结算
+message GAME_GameTotalEndAck
+{
+    repeated int32 nTotalScore = 1;         // 总分数
+    repeated int32 nMaxScore = 2;           // 最大赢分数
+    repeated int32 nAllBombCount = 3;       // 炸弹数量
+    repeated int32 nWinCount = 4;           // 输赢局数
+}

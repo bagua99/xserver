@@ -1,0 +1,261 @@
+package protocol;
+
+message UserGameData
+{
+    required int32 ullUserID = 1;
+    required string szNickName = 2;
+    required int32 ullRoomCard = 3;
+    required int32 sex = 4;
+    required string imgurl = 5;
+}
+
+message ReplayWinLose
+{
+    required string nickname = 1;
+    required int32 deltascore= 2;
+}
+
+message ReplaListInfo
+{
+    required int32 gameresult = 1;
+    required int32 roomid = 2;
+    required int32 tableid = 3;
+    repeated ReplayWinLose ReplayWinLose = 4;
+    required string datetime = 5;
+}
+
+message CL_LoginLobbyReq
+{
+    required string account = 1;
+    required int32 userid = 2;
+    required string openid = 3;
+    required string nickname = 4;
+    required int32 sex = 5;
+    required string headimgurl = 6;
+    required string token = 7;
+}
+
+// 登录返回
+message CL_LoginLobbyAck
+{
+    required int32 dwResult = 1;
+    required int32 score= 2;
+    required int32 roomcard = 3;
+    optional int32 roomid = 4;
+    optional int32 gameid = 5;
+    optional string room_ip = 6;
+    optional int32 room_port = 7;
+    optional string ticket = 8;
+}
+
+message CL_ReplayListReq
+{
+}
+
+// 回放
+message CL_ReplayListAck
+{
+}
+
+message CL_ReplayDetailReq
+{
+    required int32 roomid = 1;
+}
+
+// 回放
+message CL_ReplayDetailAck
+{
+}
+
+message CreateOption
+{
+    required string key = 1;
+    optional int32  snvalue = 2;
+    optional string ssvalue = 3;
+    repeated string mvalue = 4;
+}
+
+message CL_CreateGameReq
+{
+    required int32 nGameID = 1;
+    repeated CreateOption options = 2;
+}
+
+// 创建房间返回
+message CL_CreateGameAck
+{
+    required int32 dwResult = 1;
+    required int32 roomid = 2;
+    required string ip = 3;
+    required int32 port = 4;
+    required string ticket = 5;
+    required int32 nGameID = 6;
+}
+
+message CL_JoinGameReq
+{
+    required int32 roomid = 1;
+    required int32 mode = 2;
+}
+
+// 更新人物信息返回
+message CL_JoinGameAck
+{
+    required int32 dwResult = 1;
+    required int32 roomid = 2;
+    required string ip = 3;
+    required int32 port = 4;
+    required string ticket = 5;
+    required int32 nGameID = 6;
+}
+
+message CL_AddUserRoomCardReq
+{
+    required int32 userid = 1;
+    required int32 deltacard = 2;
+    required int32 type = 3;
+}
+
+// 登录返回
+message CL_BroadCastAck
+{
+    required int32 count = 1;
+}
+
+message UserBaseInfo
+{
+    required int32 userid = 1;
+    required string nickname = 2;
+    required string headimgurl = 3;
+    required int32 score= 4;
+    required int32 roomcard = 5;
+}
+
+// 更新人物信息返回
+message CL_UpdateUserDataAck
+{
+    required UserBaseInfo UserBaseInfo = 1;
+}
+
+
+
+//////////////////////////// 房间通用消息 ////////////////////////////
+// 游戏请求消息码
+message EnterGameReq
+{
+    required int32 userid = 1;
+    required int32 roomid = 2;
+    required string ticket = 3;
+    required bool reconnect = 4;
+    required string latitude = 5;   // 纬度
+    required string longitude = 6;  // 经度
+    required string adds = 7;       // 详细地址
+}
+
+// 游戏回复消息码
+message EnterGameAck
+{
+    required int32 err = 1;                     // 0进入成功,1找不到房间,2进入失败,其他值游戏返回错误
+}
+
+// 聊天消息
+message ChatReq
+{
+    required int32 nMsgID = 1;                  // 消息ID
+    required string text = 2;                   // 文字
+}
+
+// 聊天消息广播
+message ChatAck
+{
+    required int32 wChairID = 1;                // 座位号
+    required int32 nMsgID = 2;                  // 消息ID
+    required string text = 3;
+}
+
+// 心跳发起
+message HeartBeatReq
+{
+    required int32 time = 1;
+}
+
+// 心跳返回
+message HeartBeatAck
+{
+    required int32 time = 1;
+}
+
+// 房间玩家掉线了
+message UserOfflineAck
+{
+    required int32 userid = 1;
+}
+
+message VoiceChatReq
+{
+    required string voice = 1;
+}
+
+message VoiceChatAck
+{
+    required int32 userid = 1;
+    required string voice = 2;
+}
+
+message GameSceneReq
+{
+}
+
+message GameLBSVoteReq
+{
+}
+
+message GameLBSVoteAck
+{
+}
+
+// 游戏离开请求
+message GameLeaveReq
+{
+}
+
+// 游戏离开
+message GameLeaveAck
+{
+    required int32 nResult = 1;             // 结果(1离开成功,2解散房间)
+    required int32 nSeat = 2;               // 解散位置
+}
+
+// 游戏投票请求
+message GameVoteReq
+{
+    required bool bAgree = 1;               // 是否同意
+}
+
+// 投票信息
+message Vote
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 游戏投票
+message GameVoteAck
+{
+    required int32 nDissoveSeat = 1;        // 解散玩家位置
+    repeated Vote vote = 2;                 // 投票信息
+}
+
+// 投票结果信息
+message VoteResult
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 游戏投票结果
+message GameVoteResultAck
+{
+    required int32 nResult = 1;             // 投票结果(1解散成功)
+    repeated VoteResult voteResult = 2;     // 投票结果信息
+}

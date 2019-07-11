@@ -1,0 +1,116 @@
+// 长沙麻将
+package csmj;
+
+// 房间信息
+message RoomOption
+{
+    optional string key = 1;
+    optional int32 nValue = 2;
+    optional string strValue = 3;
+}
+
+// 房间信息
+message RoomInfo
+{
+    repeated RoomOption options = 1; // 房间参数
+}
+
+// 玩家信息
+message UserGameData
+{
+    required uint64 userid = 1;     // 玩家ID
+    required string nickname = 2;   // 玩家名字
+    required int32  sex = 3;        // 性别
+    required string headimgurl = 4; // 头像路径
+    required int32 score = 5;
+    required string ip = 6;         // IP
+    required int32 seat = 7;        // 坐位
+    required bool ready = 8;        // 准备状态
+    required string latitude = 13;  // 纬度
+    required string longitude = 14; // 经度
+    required string adds = 15;      // 详细地址
+    required bool online = 16;      // 是否在线
+}
+
+// 玩家进入回复
+message GAME_PlayerEnterAck
+{
+    required UserGameData userData = 1;     // 玩家信息
+}
+
+// 玩家退出回复
+message GAME_PlayerLeaveAck
+{
+    required int32 nSeat = 1;               // 位置
+}
+
+// 进入游戏结果
+message GAME_EnterGameAck
+{
+    required int32 err = 1;                 // 错误码
+    repeated UserGameData players = 2;      // 所有玩家信息
+    required RoomInfo room = 3;             // 房间信息
+}
+
+// 投票结果信息(对应protocol)
+message VoteResult
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 游戏重连回复
+message GAME_GameSceneAck
+{
+    required int32 err = 1;
+    required RoomInfo room = 2;
+    required string status = 3;             // ready callscore suanniu
+    repeated UserGameData players = 4;
+    required int32 bank_seat = 5;           // 庄家位置
+    required int32 nDissoveSeat = 7;        // 解散玩家位置
+    required int32 nDissoveTime = 8;        // 解散时间
+    repeated VoteResult vote = 9;           // 投票状态
+}
+
+// 准备
+message GAME_ReadyReq
+{
+    required bool bAgree = 1;                  // 是否准备
+}
+
+// 准备消息回复
+message GAME_ReadyAck
+{
+    required int32 wChairID = 1;                // 座位号
+    required bool bAgree = 2;                   // 是否准备
+}
+
+// 点击开始
+message GAME_BeginReq
+{
+}
+
+message GAME_GameEndPlayer
+{
+    required int32 seat = 1;
+    required int32 score = 2;        // 游戏积分
+    required int64 total_score = 3;  // 总共积分
+    repeated int32 cards = 4;        // 扑克
+    required int32 type = 5;         // 牌类型
+}
+
+message GAME_GameEndAck
+{
+    repeated GAME_GameEndPlayer infos = 1;
+    required int32 bank_score = 2;    // 奖池分数
+    required int32 bank_count = 3;    // 当前已当庄次数
+}
+
+message GAME_GameTotalEndPlayer
+{
+}
+
+message GAME_GameTotalEndAck
+{
+	repeated GAME_GameTotalEndPlayer infos = 1;
+}

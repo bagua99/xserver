@@ -1,0 +1,193 @@
+package nn;
+
+// 房间信息
+message RoomOption
+{
+    optional string key = 1;
+    optional int32 nValue = 2;
+    optional string strValue = 3;
+}
+
+// 房间信息
+message RoomInfo
+{
+    repeated RoomOption options = 1; // 房间参数
+}
+
+// 玩家信息
+message UserGameData
+{
+    required uint64 userid = 1;     // 玩家ID
+    required string nickname = 2;   // 玩家名字
+    required int32  sex = 3;        // 性别
+    required string headimgurl = 4; // 头像路径
+    required int32 score = 5;
+    required string ip = 6;       // IP
+    required int32 seat = 7;
+}
+
+// 游戏离开请求
+message GAME_GameLeaveReq
+{
+}
+
+// 游戏离开回复
+message GAME_GameLeaveAck
+{
+    required int32 nResult = 1;             // 结果(1离开成功,2解散房间)
+    required int32 nSeat = 2;               // 解散位置
+}
+
+// 游戏投票请求
+message GAME_GameVoteReq
+{
+    required bool bAgree = 1;               // 是否同意
+}
+
+// 投票信息
+message Vote
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 游戏投票回复
+message GAME_GameVoteAck
+{
+    required int32 nDissoveSeat = 1;        // 解散玩家位置
+    repeated Vote vote = 2;                 // 投票信息
+}
+
+// 投票结果信息
+message VoteResult
+{
+    required int32 nSeat = 1;               // 投票座位(所有玩家)
+    required int32 nVoteState = 2;          // 投票状态(0未投票,1同意,2不同意)(所有玩家)
+}
+
+// 游戏投票结果回复
+message GAME_GameVoteResultAck
+{
+    required int32 nResult = 1;             // 投票结果(1解散成功)
+    repeated VoteResult voteResult = 2;     // 投票结果信息
+}
+
+// 玩家进入回复
+message GAME_PlayerEnterAck
+{
+    required UserGameData userData = 1;     // 玩家信息
+}
+
+// 玩家退出回复
+message GAME_PlayerLeaveAck
+{
+    required int32 nSeat = 1;               // 位置
+}
+
+// 进入游戏结果
+message GAME_EnterGameAck
+{
+    required int32 err = 1;                 // 错误码
+    repeated UserGameData players = 2;      // 所有玩家信息
+    required RoomInfo room = 3;             // 房间信息
+}
+
+// 游戏重连回复
+message GAME_GameSceneAck
+{
+    required int32 nGameStatus = 1;         // 游戏状态
+    required int32 nCellScore = 2;          // 底分
+    required int32 nDissoveSeat = 3;        // 解散玩家位置
+    repeated int32 nVoteState = 4;          // 投票状态
+    repeated int32 nGameScore = 5;          // 玩家游戏分数
+    required int32 nGameCount = 6;          // 当前局数
+    required int32 nTotalGameCount = 7;     // 总局数
+    repeated bool bReady = 8;               // 是否准备
+    required int32 nBankerSeat = 9;         // 庄家位置
+    repeated bool bOperator = 10;           // 是否操作(true已操作,false未操作状态)
+    repeated int32 nCallScore = 11;         // 押注分数
+    repeated int32 nCardData = 12;          // 玩家牌
+    repeated int32 nNeed = 13;              // 是否抢庄(0还未回复,1抢庄,2不抢庄)
+}
+
+// 准备
+message GAME_ReadyReq
+{
+    required bool bAgree = 1;                  // 是否准备
+}
+
+// 准备消息回复
+message GAME_ReadyAck
+{
+    required int32 wChairID = 1;                // 座位号
+    required bool bAgree = 2;                   // 是否准备
+}
+
+// 点击开始
+message GAME_BeginReq
+{
+    required bool bBegin = 1;                   // 开始
+}
+
+// 游戏开始消息(开始下注)
+message GAME_GameStartAck
+{
+    required int32 wBankerUser = 1;             // 庄家用户
+}
+
+// 下注请求
+message GAME_CallScoreReq
+{
+    required int32 nScoreIndex = 1;             // 下注分数索引
+}
+
+// 下注结果
+message GAME_CallScoreAck
+{
+    required int32 nCallScoreUser = 1;          // 下注玩家
+    required int32 nCallScore = 2;              // 下注分数
+}
+
+// 开始抢庄
+message GAME_BeginBankAck
+{
+}
+
+// 抢庄请求
+message GAME_GameBankReq
+{
+    required bool bNeed = 1;                    // 是否抢庄
+}
+
+// 抢庄消息
+message GAME_GameBankAck
+{
+    required int32 wChairID = 1;                // 操作玩家
+    required bool bNeed = 2;                    // 是否抢庄
+}
+
+message GAME_GameEndPlayer
+{
+    required int32 seat = 1;
+    required int32 score = 2;        // 游戏积分
+    required int64 total_score = 3;  // 总共积分
+    repeated int32 cards = 4;        // 扑克
+    required int32 type = 5;         // 牌类型
+}
+
+message GAME_GameEndAck
+{
+    repeated GAME_GameEndPlayer infos = 1;
+}
+
+message GAME_GameTotalEndPlayer
+{
+	required int32 seat = 1;
+    required int64 total_count = 2;   // 总结算
+    repeated int32 niu_array = 3;     // 各种牛数量
+}
+
+message GAME_GameTotalEndAck
+{
+	repeated GAME_GameTotalEndPlayer infos = 1;
+}

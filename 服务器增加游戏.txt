@@ -1,0 +1,16 @@
+大厅:
+增加房卡消耗配置
+lobby->room_mgr->game_mgr.lua
+[6] = {2, 4},
+
+游戏服:
+增加启动服务器名字
+game->room_mgr->room_mgr.lua
+[6] = "yzbp",
+
+消息协议:
+lualib->msg_define->mgr.lua
+M.register_mod("msg_define.yzbp")
+加载pb
+lualib->pbc.lua
+"proto/yzbp.pb",
