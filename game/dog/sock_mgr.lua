@@ -44,6 +44,12 @@ end
 
 function M:data(fd, data)
     local name, msg, index = packer.unpack(data)
+    -- 解包失败，非法的客户端,加入黑名单
+    if name == nil then
+        self:close_and_notify_room(fd)
+        return
+    end
+    --[[ 去除包序号判断
     local cur_index = self.fd_2_index[fd]
     -- 解包失败，非法的客户端,加入黑名单
     if name == nil or cur_index ~= index then
@@ -51,6 +57,7 @@ function M:data(fd, data)
         return
     end
     self.fd_2_index[fd] = cur_index + 1
+    --]]
     if name ~= "protocol.HeartBeatReq" then
         print("recv msg", name)
         utils.print(msg)
@@ -81,6 +88,7 @@ function M:close_and_notify_room(fd)
 end
 
 function M:close_conn(fd)
+    self.fd_2_index[fd] = nil
     self.heartbeat_tbl[fd] = nil
     self.close_tbl[fd] = true
     skynet.call(self.gate, "lua", "kick", fd)

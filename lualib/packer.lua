@@ -14,19 +14,39 @@ function M.pack(name, msg)
     return head .. buf
 end
 
--- 拆包
+-- -- 拆包(含包序号)
+-- function M.unpack(data)
+--     local data = utils.xor(data)
+--     local id = string.unpack(">H", data)
+--     local buf = string.sub(data, 3, #data-10)
+--     local name = msg_define.id_2_name(id)
+--     local msg = pbc:decode(name, buf)
+--     -- 包序号
+--     local index = string.sub(data, 2+#buf+1,2+#buf+2)
+--     index = string.unpack(">H", index)
+--     -- 包crc32校验
+--     local crcdata = string.sub(data, 1, #data-8)
+--     local crc = string.sub(data,2+#buf+3)
+--     if crc ~= crc32.hash(crcdata) then
+--         print("数据包校验crc32失败")
+--         return
+--     end
+
+--     return name, msg, index
+-- end
+
+-- 拆包(不含包序号)
 function M.unpack(data)
     local data = utils.xor(data)
     local id = string.unpack(">H", data)
-    local buf = string.sub(data, 3, #data-10)
+    local buf = string.sub(data, 3, #data-8)
     local name = msg_define.id_2_name(id)
     local msg = pbc:decode(name, buf)
     -- 包序号
-    local index = string.sub(data, 2+#buf+1,2+#buf+2)
-    index = string.unpack(">H", index)
+    local index = 1
     -- 包crc32校验
     local crcdata = string.sub(data, 1, #data-8)
-    local crc = string.sub(data,2+#buf+3)
+    local crc = string.sub(data,2+#buf+1)
     if crc ~= crc32.hash(crcdata) then
         print("数据包校验crc32失败")
         return
